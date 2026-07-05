@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, useTransform, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 
@@ -22,8 +22,6 @@ const IMG_HEIGHT = 85;
 function FlipCard({
     src,
     index,
-    total,
-    phase,
     target,
 }: FlipCardProps) {
     return (
