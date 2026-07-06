@@ -1,17 +1,14 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useTransform, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 
 // --- Types ---
-export type AnimationPhase = "scatter" | "line" | "circle" | "bottom-strip";
-
 export interface FlipCardProps {
     src: string;
     index: number;
     total: number;
-    phase: AnimationPhase;
     target: { x: number; y: number; rotation: number; scale: number; opacity: number };
 }
 
@@ -113,47 +110,46 @@ const IMAGES = [
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
 export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-    const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
 
     // --- Container Size ---
     useEffect(() => {
         if (!containerRef.current) return;
-
         const handleResize = (entries: ResizeObserverEntry[]) => {
             for (const entry of entries) {
-                setContainerSize({
-                    width: entry.contentRect.width,
-                    height: entry.contentRect.height,
-                });
+                setContainerSize({ width: entry.contentRect.width, height: entry.contentRect.height });
             }
         };
-
         const observer = new ResizeObserver(handleResize);
         observer.observe(containerRef.current);
-
-        setContainerSize({
-            width: containerRef.current.offsetWidth,
-            height: containerRef.current.offsetHeight,
-        });
-
+        setContainerSize({ width: containerRef.current.offsetWidth, height: containerRef.current.offsetHeight });
         return () => observer.disconnect();
     }, []);
 
-    // --- Mapped scroll values ---
-    // 1. Direct Transforms (Rely on Lenis for smoothness, NO springs here)
+    // --- High-Performance Scroll Transforms ---
     const morphProgress = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
     const scrollRotate = useTransform(scrollYProgress, [0.15, 1], [0, 360]);
+
+    const [morphValue, setMorphValue] = useState(0);
+    const [rotateValue, setRotateValue] = useState(0);
+
+    useMotionValueEvent(morphProgress, "change", (latest) => setMorphValue(latest));
+    useMotionValueEvent(scrollRotate, "change", (latest) => setRotateValue(latest));
 
     // --- Mouse Parallax ---
     const mouseX = useMotionValue(0);
     const smoothMouseX = useSpring(mouseX, { stiffness: 30, damping: 20 });
+    const [parallaxValue, setParallaxValue] = useState(0);
+
+    useEffect(() => {
+        const unsubscribe = smoothMouseX.on("change", setParallaxValue);
+        return () => unsubscribe();
+    }, [smoothMouseX]);
 
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
-
         const handleMouseMove = (e: MouseEvent) => {
             const rect = container.getBoundingClientRect();
             const relativeX = e.clientX - rect.left;
@@ -164,75 +160,40 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
         return () => container.removeEventListener("mousemove", handleMouseMove);
     }, [mouseX]);
 
-    // --- Intro Sequence ---
-    useEffect(() => {
-        const timer1 = setTimeout(() => setIntroPhase("line"), 500);
-        const timer2 = setTimeout(() => setIntroPhase("circle"), 2500);
-        return () => { clearTimeout(timer1); clearTimeout(timer2); };
-    }, []);
-
-    // --- Random Scatter Positions ---
-    const scatterPositions = useMemo(() => {
-        return IMAGES.map(() => ({
-            x: (Math.random() - 0.5) * 1500,
-            y: (Math.random() - 0.5) * 1000,
-            rotation: (Math.random() - 0.5) * 180,
-            scale: 0.6,
-            opacity: 0,
-        }));
-    }, []);
-
-    // --- Render Loop (Manual Calculation for Morph) ---
-    const [morphValue, setMorphValue] = useState(0);
-    const [rotateValue, setRotateValue] = useState(0);
-
-    // 2. Optimized Event Listeners (Prevents memory leaks and React render thrashing)
-    useMotionValueEvent(morphProgress, "change", (latest) => setMorphValue(latest));
-    useMotionValueEvent(scrollRotate, "change", (latest) => setRotateValue(latest));
-
-    // Keep the mouse parallax as it is not tied to scroll
-    const [parallaxValue, setParallaxValue] = useState(0);
-    useEffect(() => {
-        const unsubscribe = smoothMouseX.on("change", setParallaxValue);
-        return () => unsubscribe();
-    }, [smoothMouseX]);
-
-    // --- Content Opacity ---
+    // --- Scroll-Driven Text Opacity ---
+    // Text fades out smoothly as the circle morphs into the arc
+    const introOpacity = useTransform(morphProgress, [0, 0.5], [1, 0]);
+    const introScale = useTransform(morphProgress, [0, 0.5], [1, 0.9]);
+    
     const contentOpacity = useTransform(morphProgress, [0.8, 1], [0, 1]);
     const contentY = useTransform(morphProgress, [0.8, 1], [20, 0]);
 
     return (
         <div ref={containerRef} className="relative w-full h-full bg-background overflow-hidden">
             <div className="flex h-full w-full flex-col items-center justify-center [perspective:1000px]">
-                {/* Intro Text (Fades out) */}
-                <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
-                        transition={{ duration: 1 }}
-                        className="text-2xl font-medium tracking-tight text-foreground md:text-4xl"
-                    >
-                        The Art of Perception.
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-4 text-xs font-bold tracking-[0.2em] text-muted-foreground"
-                    >
-                        SCROLL TO EXPLORE
-                    </motion.p>
-                </div>
 
-                {/* Arc Active Content (Fades in) */}
+                {/* Intro Text (Scroll Fade Out) */}
+                <motion.div 
+                    style={{ opacity: introOpacity, scale: introScale }}
+                    className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2"
+                >
+                    <h1 className="text-2xl font-medium tracking-tight text-foreground md:text-4xl font-serif">
+                        The Art of Perception.
+                    </h1>
+                    <p className="mt-4 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+                        Scroll to explore
+                    </p>
+                </motion.div>
+
+                {/* Arc Active Content (Scroll Fade In) */}
                 <motion.div
                     style={{ opacity: contentOpacity, y: contentY }}
-                    className="absolute top-[10%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
+                    className="absolute top-[12%] mt-12 md:mt-16 z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
-                    <h2 className="text-3xl md:text-5xl font-semibold text-foreground tracking-tight mb-4">
+                    <h2 className="text-3xl md:text-5xl font-serif font-semibold text-foreground tracking-tight mb-4">
                         Curated Masterpieces
                     </h2>
-                    <p className="text-sm md:text-base text-muted-foreground max-w-lg leading-relaxed">
+                    <p className="text-sm md:text-base text-muted-foreground max-w-lg leading-relaxed font-sans">
                         Discover a world where light meets emotion. <br className="hidden md:block" />
                         Scroll through a curated collection of visual stories designed to captivate.
                     </p>
@@ -241,70 +202,53 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
                 {/* Main Container */}
                 <div className="relative flex items-center justify-center w-full h-full">
                     {IMAGES.slice(0, TOTAL_IMAGES).map((src, i) => {
-                        let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
+                        const isMobile = containerSize.width < 768;
+                        const minDimension = Math.min(containerSize.width, containerSize.height);
 
-                        if (introPhase === "scatter") {
-                            target = scatterPositions[i];
-                        } else if (introPhase === "line") {
-                            const lineSpacing = 70;
-                            const lineTotalWidth = TOTAL_IMAGES * lineSpacing;
-                            const lineX = i * lineSpacing - lineTotalWidth / 2;
-                            target = { x: lineX, y: 0, rotation: 0, scale: 1, opacity: 1 };
-                        } else {
-                            const isMobile = containerSize.width < 768;
-                            const minDimension = Math.min(containerSize.width, containerSize.height);
+                        // A. Calculate Circle Position (Baseline)
+                        const circleRadius = Math.min(minDimension * 0.35, 350);
+                        const circleAngle = (i / TOTAL_IMAGES) * 360;
+                        const circleRad = (circleAngle * Math.PI) / 180;
+                        const circlePos = {
+                            x: Math.cos(circleRad) * circleRadius,
+                            y: Math.sin(circleRad) * circleRadius,
+                            rotation: circleAngle + 90,
+                        };
 
-                            const circleRadius = Math.min(minDimension * 0.35, 350);
-                            const circleAngle = (i / TOTAL_IMAGES) * 360;
-                            const circleRad = (circleAngle * Math.PI) / 180;
-                            const circlePos = {
-                                x: Math.cos(circleRad) * circleRadius,
-                                y: Math.sin(circleRad) * circleRadius,
-                                rotation: circleAngle + 90,
-                            };
+                        // B. Calculate Bottom Arc Position
+                        const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
+                        const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
+                        const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
+                        const arcCenterY = arcApexY + arcRadius;
+                        
+                        const spreadAngle = isMobile ? 100 : 130;
+                        const startAngle = -90 - (spreadAngle / 2);
+                        const step = spreadAngle / (TOTAL_IMAGES - 1);
 
-                            const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
-                            const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
+                        const scrollProgress = Math.min(Math.max(rotateValue / 360, 0), 1);
+                        const maxRotation = spreadAngle * 1.0; 
+                        const boundedRotation = -scrollProgress * maxRotation;
+                        const currentArcAngle = startAngle + (i * step) + boundedRotation;
+                        const arcRad = (currentArcAngle * Math.PI) / 180;
 
-                            const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
-                            const arcCenterY = arcApexY + arcRadius;
+                        const arcPos = {
+                            x: Math.cos(arcRad) * arcRadius + parallaxValue,
+                            y: Math.sin(arcRad) * arcRadius + arcCenterY,
+                            rotation: currentArcAngle + 90,
+                            scale: isMobile ? 1.4 : 1.8,
+                        };
 
-                            const spreadAngle = isMobile ? 100 : 130;
-                            const startAngle = -90 - (spreadAngle / 2);
-                            const step = spreadAngle / (TOTAL_IMAGES - 1);
-
-                            const scrollProgress = Math.min(Math.max(rotateValue / 360, 0), 1);
-                            const maxRotation = spreadAngle * 1.0;
-                            const boundedRotation = -scrollProgress * maxRotation;
-
-                            const currentArcAngle = startAngle + (i * step) + boundedRotation;
-                            const arcRad = (currentArcAngle * Math.PI) / 180;
-
-                            const arcPos = {
-                                x: Math.cos(arcRad) * arcRadius + parallaxValue,
-                                y: Math.sin(arcRad) * arcRadius + arcCenterY,
-                                rotation: currentArcAngle + 90,
-                                scale: isMobile ? 1.4 : 1.8,
-                            };
-
-                            target = {
-                                x: lerp(circlePos.x, arcPos.x, morphValue),
-                                y: lerp(circlePos.y, arcPos.y, morphValue),
-                                rotation: lerp(circlePos.rotation, arcPos.rotation, morphValue),
-                                scale: lerp(1, arcPos.scale, morphValue),
-                                opacity: 1,
-                            };
-                        }
+                        // C. Interpolate (Morph) deterministically
+                        const target = {
+                            x: lerp(circlePos.x, arcPos.x, morphValue),
+                            y: lerp(circlePos.y, arcPos.y, morphValue),
+                            rotation: lerp(circlePos.rotation, arcPos.rotation, morphValue),
+                            scale: lerp(1, arcPos.scale, morphValue),
+                            opacity: 1,
+                        };
 
                         return (
-                            <FlipCard
-                                key={i}
-                                src={src}
-                                index={i}
-                                total={TOTAL_IMAGES}
-                                phase={introPhase}
-                                target={target}
-                            />
+                            <FlipCard index={i} key={i} src={src} target={target} total={TOTAL_IMAGES}/>
                         );
                     })}
                 </div>
