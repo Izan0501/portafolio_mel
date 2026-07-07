@@ -11,10 +11,10 @@ function App() {
       <LandingHero />
       <ScrollMorphSection />
       <FeaturedExhibitions />
+      <PortfolioCategories />
       <div id="gallery">
         <GalleryParallax />
       </div>
-      <PortfolioCategories />
     </MainLayout>
   )
 }
