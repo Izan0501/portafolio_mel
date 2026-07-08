@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, useScroll } from "framer-motion";
+import { motion, useTransform, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
@@ -18,13 +18,22 @@ interface HorizontalCarouselProps {
 
 export function HorizontalCarousel({ cards, className }: HorizontalCarouselProps) {
   const targetRef = useRef<HTMLDivElement>(null);
-  
+
+  // Track from the moment the top of the container enters the bottom of the screen
   const { scrollYProgress } = useScroll({
     target: targetRef,
+    offset: ["start end", "end start"],
   });
 
-  // Maps vertical scroll progress to horizontal translation
-  const x = useTransform(scrollYProgress, [0, 1], ["1%", "-85%"]);
+  // Inject high-end momentum (smooth catch-up physics)
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 150,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  // Start pushed to the right (40%) to create entry anticipation, end far left (-95%)
+  const x = useTransform(smoothProgress, [0, 1], ["40%", "-95%"]);
 
   return (
     <section ref={targetRef} className={cn("relative h-[300vh] bg-background", className)}>

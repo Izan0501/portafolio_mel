@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { FloatingNavbar } from './FloatingNavbar';
-import { Footer } from './Footer';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -11,7 +10,6 @@ export function MainLayout({ children }: MainLayoutProps) {
     <div className="relative min-h-screen w-full bg-background text-foreground overflow-clip">
       <FloatingNavbar/>
       <main>{children}</main>
-      <Footer/>
     </div>
   );
 }
