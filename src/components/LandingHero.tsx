@@ -1,6 +1,5 @@
 "use client"
 
-import { useRef } from "react"
 import { LayoutGroup, motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
 import { TextRotate } from "@/components/ui/text-rotate"
 

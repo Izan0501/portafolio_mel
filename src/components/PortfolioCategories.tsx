@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, LayoutGroup } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, LayoutGroup, type Variants, type Easing } from "framer-motion";
 import { ImageAccordion, type AccordionItemData } from "@/components/ui/image-accordion";
 import { TextRotate } from "@/components/ui/text-rotate";
 
@@ -14,16 +14,16 @@ const categories: AccordionItemData[] = [
 ];
 
 // --- High-End Animation Variants ---
-const CUSTOM_EASE = [0.16, 1, 0.3, 1];
+const CUSTOM_EASE: Easing = [0.16, 1, 0.3, 1];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.15, delayChildren: 0.1 }
   }
 };
 
-const maskRevealVariants = {
+const maskRevealVariants: Variants = {
   hidden: { y: "100%", opacity: 0, filter: "blur(4px)" },
   visible: { 
     y: "0%", 
@@ -33,7 +33,7 @@ const maskRevealVariants = {
   }
 };
 
-const fadeUpVariants = {
+const fadeUpVariants: Variants = {
   hidden: { y: 30, opacity: 0, filter: "blur(4px)" },
   visible: { 
     y: 0, 
@@ -43,7 +43,7 @@ const fadeUpVariants = {
   }
 };
 
-const imageRevealVariants = {
+const imageRevealVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95, filter: "blur(10px)" },
   visible: { 
     opacity: 1, 
