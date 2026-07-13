@@ -3,6 +3,11 @@
 import { useRef } from "react";
 import { useTransform, motion, useScroll } from "framer-motion";
 import type { MotionValue } from "framer-motion";
+import {
+  CardContainer as ThreeDCardContainer,
+  CardBody as ThreeDCardBody,
+  CardItem as ThreeDCardItem,
+} from "@/components/ui/3d-card";
 
 export interface StackingCard {
   index: number;
@@ -52,7 +57,7 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
         }}
         className="relative w-full max-w-5xl mx-auto h-[80vh] rounded-2xl overflow-hidden shadow-2xl border border-foreground/10"
       >
-        {/* Background image */}
+        {/* Background image — scroll parallax, untouched */}
         <motion.div
           className="absolute inset-0 w-full h-full bg-neutral-900"
           style={{ scale: imageScale, opacity: imageOpacity }}
@@ -68,7 +73,8 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.95) 100%)",
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.95) 100%)",
           }}
         />
 
@@ -78,53 +84,75 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
           style={{ background: card.accentColor }}
         />
 
-        {/* Label — top left */}
-        <div className="absolute top-8 left-8 flex items-center gap-3">
-          <div
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: card.accentColor }}
-          />
-          <span
-            className="text-[10px] tracking-[0.25em] uppercase font-sans font-medium"
-            style={{ color: card.accentColor }}
-          >
-            {card.label}
-          </span>
-        </div>
-
-        {/* Bottom content */}
-        <div className="absolute bottom-0 left-0 right-0 px-8 pb-10 md:px-12 md:pb-12">
-          <p
-            className="text-[10px] tracking-[0.2em] uppercase mb-4 font-sans font-medium"
-            style={{ color: card.accentColor }}
-          >
-            {card.subtitle}
-          </p>
-
-          <h2 className="text-white font-serif font-medium mb-6 leading-tight text-4xl md:text-5xl lg:text-6xl whitespace-pre-line tracking-tight">
-            {card.title}
-          </h2>
-
-          <div className="flex flex-col md:flex-row md:items-start gap-4 mb-6">
-            <div
-              className="hidden md:block h-[1px] w-8 shrink-0 mt-2.5 opacity-50"
-              style={{ background: card.accentColor }}
-            />
-            <p className="text-white/70 text-sm md:text-base font-sans leading-relaxed max-w-[55ch]">
-              {card.description}
-            </p>
-          </div>
-        </div>
-
-        {/* Vertical counter */}
-        <div
-          className="absolute right-8 bottom-12 top-20 flex flex-col items-center justify-center pointer-events-none"
-          style={{ writingMode: "vertical-rl" }}
+        {/* ── 3D INNER STAGE ── wraps only the floating content, not the bg */}
+        <ThreeDCardContainer
+          className="absolute inset-0 w-full h-full"
+          containerClassName="absolute inset-0 w-full h-full"
         >
-          <span className="text-[10px] tracking-[0.3em] uppercase opacity-40 text-white font-sans">
-            0{card.index} / 0{total}
-          </span>
-        </div>
+          <ThreeDCardBody className="absolute inset-0 w-full h-full">
+
+            {/* Label — top left */}
+            <ThreeDCardItem
+              as="div"
+              translateZ={50}
+              className="absolute top-8 left-8 flex items-center gap-3"
+            >
+              <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: card.accentColor }}
+              />
+              <span
+                className="text-[10px] tracking-[0.25em] uppercase font-sans font-medium"
+                style={{ color: card.accentColor }}
+              >
+                {card.label}
+              </span>
+            </ThreeDCardItem>
+
+            {/* Vertical counter */}
+            <ThreeDCardItem
+              as="div"
+              translateZ={30}
+              className="absolute right-8 bottom-12 top-20 flex flex-col items-center justify-center pointer-events-none"
+              style={{ writingMode: "vertical-rl" } as React.CSSProperties}
+            >
+              <span className="text-[10px] tracking-[0.3em] uppercase opacity-40 text-white font-sans">
+                0{card.index} / 0{total}
+              </span>
+            </ThreeDCardItem>
+
+            {/* Bottom content block */}
+            <div className="absolute bottom-0 left-0 right-0 px-8 pb-10 md:px-12 md:pb-12">
+              <ThreeDCardItem as="p" translateZ={40} className="text-[10px] tracking-[0.2em] uppercase mb-4 font-sans font-medium" style={{ color: card.accentColor } as React.CSSProperties}>
+                {card.subtitle}
+              </ThreeDCardItem>
+
+              <ThreeDCardItem
+                as="h2"
+                translateZ={70}
+                className="text-white font-serif font-medium mb-6 leading-tight text-4xl md:text-5xl lg:text-6xl whitespace-pre-line tracking-tight"
+              >
+                {card.title}
+              </ThreeDCardItem>
+
+              <div className="flex flex-col md:flex-row md:items-start gap-4 mb-6">
+                <div
+                  className="hidden md:block h-[1px] w-8 shrink-0 mt-2.5 opacity-50"
+                  style={{ background: card.accentColor }}
+                />
+                <ThreeDCardItem
+                  as="p"
+                  translateZ={50}
+                  className="text-white/70 text-sm md:text-base font-sans leading-relaxed max-w-[55ch]"
+                >
+                  {card.description}
+                </ThreeDCardItem>
+              </div>
+            </div>
+
+          </ThreeDCardBody>
+        </ThreeDCardContainer>
+
       </motion.article>
     </div>
   );
