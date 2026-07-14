@@ -55,104 +55,91 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
           top: `${card.index * 2}vh`,
           transformOrigin: "top center",
         }}
-        className="relative w-full max-w-5xl mx-auto h-[80vh] rounded-2xl overflow-hidden shadow-2xl border border-foreground/10"
+        className="relative w-full max-w-5xl mx-auto h-[450px] sm:h-[520px] md:h-[600px] bg-transparent"
       >
-        {/* Background image — scroll parallax, untouched */}
-        <m.div
-          className="absolute inset-0 w-full h-full bg-neutral-900"
-          style={{ scale: imageScale, opacity: imageOpacity }}
-        >
-          <img
-            src={card.imageUrl}
-            alt={card.title}
-            className="w-full h-full object-cover opacity-80"
-          />
-        </m.div>
-
-        {/* Editorial Dark Overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.95) 100%)",
-          }}
-        />
-
-        {/* Top accent strip */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px] opacity-70"
-          style={{ background: card.accentColor }}
-        />
-
-        {/* ── 3D INNER STAGE ── wraps only the floating content, not the bg */}
         <ThreeDCardContainer
-          className="absolute inset-0 w-full h-full"
-          containerClassName="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full bg-transparent"
+          containerClassName="absolute inset-0 w-full h-full bg-transparent"
         >
-          <ThreeDCardBody className="absolute inset-0 w-full h-full">
-
-            {/* Label — top left */}
+          <ThreeDCardBody 
+            className="relative w-full h-[450px] sm:h-[520px] md:h-[600px]"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            
+            {/* LAYER 1: THE PHYSICAL CARD (Background Image + Clipping Mask + Borders) */}
+            {/* This item handles all the styling that would have broken the 3D stage */}
             <ThreeDCardItem
-              as="div"
-              translateZ={50}
-              className="absolute top-8 left-8 flex items-center gap-3"
+              translateZ={0}
+              className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-white/15 shadow-[0_30px_70px_rgba(0,0,0,0.9)] bg-neutral-950 pointer-events-none"
             >
-              <div
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: card.accentColor }}
-              />
-              <span
-                className="text-[10px] tracking-[0.25em] uppercase font-sans font-medium"
-                style={{ color: card.accentColor }}
-              >
-                {card.label}
-              </span>
-            </ThreeDCardItem>
-
-            {/* Vertical counter */}
-            <ThreeDCardItem
-              as="div"
-              translateZ={30}
-              className="absolute right-8 bottom-12 top-20 flex flex-col items-center justify-center pointer-events-none"
-              style={{ writingMode: "vertical-rl" } as React.CSSProperties}
-            >
-              <span className="text-[10px] tracking-[0.3em] uppercase opacity-40 text-white font-sans">
-                0{card.index} / 0{total}
-              </span>
-            </ThreeDCardItem>
-
-            {/* Bottom content block */}
-            <div className="absolute bottom-0 left-0 right-0 px-8 pb-10 md:px-12 md:pb-12">
-              <ThreeDCardItem as="p" translateZ={40} className="text-[10px] tracking-[0.2em] uppercase mb-4 font-sans font-medium" style={{ color: card.accentColor } as React.CSSProperties}>
-                {card.subtitle}
-              </ThreeDCardItem>
-
-              <ThreeDCardItem
-                as="h2"
-                translateZ={70}
-                className="text-white font-serif font-medium mb-6 leading-tight text-4xl md:text-5xl lg:text-6xl whitespace-pre-line tracking-tight"
-              >
-                {card.title}
-              </ThreeDCardItem>
-
-              <div className="flex flex-col md:flex-row md:items-start gap-4 mb-6">
-                <div
-                  className="hidden md:block h-[1px] w-8 shrink-0 mt-2.5 opacity-50"
-                  style={{ background: card.accentColor }}
+              {card.imageUrl && (
+                <m.img
+                  src={card.imageUrl}
+                  alt={card.title}
+                  loading="lazy"
+                  style={{ scale: imageScale, opacity: imageOpacity }}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
+              )}
+              {/* LAYER 2: EDITORIAL DARK GRADIENT OVERLAY */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30 pointer-events-none" />
+            </ThreeDCardItem>
+
+            {/* LAYER 2: FOREGROUND TYPOGRAPHY (Free to project in Z-space because parent has no overflow-hidden) */}
+            <div 
+              className="relative z-10 w-full h-full flex flex-col justify-between p-6 sm:p-8 md:p-12 pointer-events-none"
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              
+              {/* Top Metadata Row */}
+              <div className="flex justify-between items-start w-full" style={{ transformStyle: "preserve-3d" }}>
                 <ThreeDCardItem
-                  as="p"
                   translateZ={50}
-                  className="text-white/70 text-sm md:text-base font-sans leading-relaxed max-w-[55ch]"
+                  className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-white/90 font-mono bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-lg w-auto"
+                >
+                  • PHASE {card.index}
+                </ThreeDCardItem>
+                
+                <ThreeDCardItem
+                  translateZ={40}
+                  className="text-[10px] sm:text-xs font-mono text-white/60 tracking-widest w-auto"
+                >
+                  0{card.index} / 0{total}
+                </ThreeDCardItem>
+              </div>
+
+              {/* Bottom Editorial Content */}
+              <div className="flex flex-col gap-3 max-w-2xl" style={{ transformStyle: "preserve-3d" }}>
+                <ThreeDCardItem
+                  translateZ={60}
+                  className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-sans font-semibold w-auto"
+                  style={{ color: card.accentColor }}
+                >
+                  {card.subtitle || card.label}
+                </ThreeDCardItem>
+
+                {/* MAXIMUM POP-OUT: Title leaps out toward the user */}
+                <ThreeDCardItem
+                  as="h2"
+                  translateZ={120}
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-none drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] w-full"
+                >
+                  {card.title}
+                </ThreeDCardItem>
+
+                <ThreeDCardItem
+                  translateZ={80}
+                  className="text-sm sm:text-base md:text-lg text-neutral-300 font-sans font-light leading-relaxed border-l-2 pl-4 mt-2 drop-shadow-md bg-black/30 backdrop-blur-[2px] p-3 rounded-r-xl w-full"
+                  style={{ borderColor: card.accentColor }}
                 >
                   {card.description}
                 </ThreeDCardItem>
               </div>
+
             </div>
 
           </ThreeDCardBody>
         </ThreeDCardContainer>
-
       </m.article>
     </div>
   );
