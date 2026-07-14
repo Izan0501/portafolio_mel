@@ -40,54 +40,61 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
   });
 
   const imageScale = useTransform(localProgress, [0, 1], [1.15, 1]);
-  const imageOpacity = useTransform(localProgress, [0, 0.6], [0.3, 1]);
   const cardScale = useTransform(progress, range, [1, targetScale]);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-screen flex items-center justify-center sticky top-0"
+    // TIER 1: THE UI-LAYOUT STICKY TRACK (Strictly handles screen locking and stacking overlap)
+    <div 
+      className="h-screen w-full flex items-center justify-center sticky top-0 pointer-events-none bg-transparent border-none shadow-none"
       style={{ zIndex: card.index }}
     >
-      <m.article
+      
+      {/* TIER 2: THE SCALING STAGE (Strictly handles shrinkage, offset, and GPU acceleration) */}
+      <m.div
         style={{
           scale: cardScale,
-          top: `${card.index * 2}vh`,
-          transformOrigin: "top center",
+          top: `calc(5vh + ${(card.index - 1) * 30}px)`, // Stacking vertical cascade offset
         }}
-        className="relative w-full max-w-5xl mx-auto h-[450px] sm:h-[520px] md:h-[600px] bg-transparent"
+        className="relative w-full max-w-5xl mx-auto h-[450px] sm:h-[520px] md:h-[600px] origin-top will-change-transform transform-gpu pointer-events-auto bg-transparent border-none shadow-none"
       >
+        
+        {/* TIER 3: OUR PROVEN SIBLING 3D DIORAMA (DO NOT ALTER THIS WORKING VISUAL LOGIC) */}
         <ThreeDCardContainer
-          className="absolute inset-0 w-full h-full bg-transparent"
-          containerClassName="absolute inset-0 w-full h-full bg-transparent"
+          className="w-full h-full bg-transparent border-none shadow-none py-0"
+          containerClassName="w-full h-full bg-transparent border-none shadow-none py-0 flex items-center justify-center"
         >
           <ThreeDCardBody 
-            className="relative w-full h-[450px] sm:h-[520px] md:h-[600px]"
+            className="relative w-full h-full border-none bg-transparent"
             style={{ transformStyle: "preserve-3d" }}
           >
             
-            {/* LAYER 1: THE PHYSICAL CARD (Background Image + Clipping Mask + Borders) */}
-            {/* This item handles all the styling that would have broken the 3D stage */}
-            <ThreeDCardItem
-              translateZ={0}
-              className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-white/15 shadow-[0_30px_70px_rgba(0,0,0,0.9)] bg-neutral-950 pointer-events-none"
+            {/* LAYER 1: STRICTLY BRIGHT BACKGROUND IMAGE */}
+            <div 
+              className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.95)] border border-white/15 bg-neutral-950 z-0"
+              style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
             >
               {card.imageUrl && (
                 <m.img
                   src={card.imageUrl}
                   alt={card.title}
                   loading="lazy"
-                  style={{ scale: imageScale, opacity: imageOpacity }}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  decoding="async"
+                  style={{ scale: imageScale }}
+                  // CRITICAL: Force absolute optical purity. Zero inherited opacity or darkening filters!
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-100 brightness-100 contrast-100 filter-none"
                 />
               )}
-              {/* LAYER 2: EDITORIAL DARK GRADIENT OVERLAY */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30 pointer-events-none" />
-            </ThreeDCardItem>
+              
+              {/* THE 33% STRUCTURAL GUARANTEE: 
+                Using 'inset-x-0 bottom-0 h-1/3' ensures this dark gradient only exists in the bottom 33% of the card. 
+                The top 67% of the photo is 100% free of any overlay, guaranteeing maximum original brightness! 
+              */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/95 via-black/60 to-transparent pointer-events-none" />
+            </div>
 
-            {/* LAYER 2: FOREGROUND TYPOGRAPHY (Free to project in Z-space because parent has no overflow-hidden) */}
+            {/* SIBLING 2: 3D FOREGROUND TYPOGRAPHY (Free to project infinitely in Z-space) */}
             <div 
-              className="relative z-10 w-full h-full flex flex-col justify-between p-6 sm:p-8 md:p-12 pointer-events-none"
+              className="absolute inset-0 w-full h-full flex flex-col justify-between p-6 sm:p-8 md:p-12 pointer-events-none z-10"
               style={{ transformStyle: "preserve-3d" }}
             >
               
@@ -95,42 +102,42 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
               <div className="flex justify-between items-start w-full" style={{ transformStyle: "preserve-3d" }}>
                 <ThreeDCardItem
                   translateZ={50}
-                  className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-white/90 font-mono bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-lg w-auto"
+                  className="text-xs sm:text-sm uppercase tracking-[0.25em] text-white/90 font-mono bg-black/60 px-4 py-1.5 rounded-full border border-white/15 shadow-lg w-auto"
                 >
                   • PHASE {card.index}
                 </ThreeDCardItem>
                 
                 <ThreeDCardItem
-                  translateZ={40}
-                  className="text-[10px] sm:text-xs font-mono text-white/60 tracking-widest w-auto"
+                  translateZ={30}
+                  className="text-xs sm:text-sm font-mono text-white/60 tracking-widest font-semibold w-auto drop-shadow-md"
                 >
                   0{card.index} / 0{total}
                 </ThreeDCardItem>
               </div>
 
-              {/* Bottom Editorial Content */}
-              <div className="flex flex-col gap-3 max-w-2xl" style={{ transformStyle: "preserve-3d" }}>
+              {/* Bottom Editorial Content Row */}
+              <div className="flex flex-col gap-2 sm:gap-3 max-w-2xl" style={{ transformStyle: "preserve-3d" }}>
                 <ThreeDCardItem
                   translateZ={60}
-                  className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-sans font-semibold w-auto"
+                  className="text-xs sm:text-sm uppercase tracking-[0.3em] font-sans font-bold w-auto drop-shadow-md"
                   style={{ color: card.accentColor }}
                 >
                   {card.subtitle || card.label}
                 </ThreeDCardItem>
 
-                {/* MAXIMUM POP-OUT: Title leaps out toward the user */}
+                {/* Title leaps out aggressively */}
                 <ThreeDCardItem
                   as="h2"
                   translateZ={120}
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-none drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] w-full"
+                  className="text-3xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight leading-none drop-shadow-[0_15px_25px_rgba(0,0,0,0.9)] w-full"
                 >
                   {card.title}
                 </ThreeDCardItem>
 
+                {/* Description */}
                 <ThreeDCardItem
                   translateZ={80}
-                  className="text-sm sm:text-base md:text-lg text-neutral-300 font-sans font-light leading-relaxed border-l-2 pl-4 mt-2 drop-shadow-md bg-black/30 backdrop-blur-[2px] p-3 rounded-r-xl w-full"
-                  style={{ borderColor: card.accentColor }}
+                  className="text-sm sm:text-base md:text-lg text-neutral-200 font-sans font-normal leading-relaxed drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] w-full mt-1 sm:mt-2"
                 >
                   {card.description}
                 </ThreeDCardItem>
@@ -140,7 +147,7 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
 
           </ThreeDCardBody>
         </ThreeDCardContainer>
-      </m.article>
+      </m.div>
     </div>
   );
 }
@@ -158,14 +165,16 @@ export function StackingCards({ cards }: StackingCardsProps) {
   return (
     <div ref={containerRef} className="relative w-full">
       {cards.map((card, i) => {
-        const targetScale = 1 - (total - i) * 0.04;
-        const segmentSize = 1 / total;
+        // UI-Layout targetScale logic: Each buried card shrinks by 5%
+        const targetScale = 1 - (total - i) * 0.05; 
+        const range: [number, number] = [i * (1 / total), 1];
+        
         return (
           <CardItem
             key={card.index}
             card={card}
             progress={scrollYProgress}
-            range={[i * segmentSize, (i + 1) * segmentSize]}
+            range={range}
             targetScale={targetScale}
             total={total}
           />

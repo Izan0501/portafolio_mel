@@ -34,7 +34,7 @@ const processCards: StackingCard[] = [
 
 export function VisionProcess() {
   return (
-    <section id="vision" className="w-full bg-background pt-32 pb-16">
+    <section id="vision" className="w-full bg-background pt-10 pb-20">
       <div className="container mx-auto px-6 max-w-7xl mb-16 text-center">
         <h2 className="text-3xl md:text-5xl font-serif font-semibold text-foreground tracking-tight">
           The Creative Process

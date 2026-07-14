@@ -38,7 +38,7 @@ export function HorizontalCarousel({ cards, className }: HorizontalCarouselProps
   return (
     <section ref={targetRef} className={cn("relative h-[300vh] bg-background", className)}>
       <div className="sticky top-0 flex h-screen items-center overflow-clip">
-        <m.div style={{ x }} className="flex gap-6 px-4 md:px-10">
+        <m.div style={{ x }} className="flex gap-6 px-4 md:px-10 will-change-transform transform-gpu">
           {cards.map((card) => {
             return <CarouselCard card={card} key={card.id} />;
           })}
@@ -50,14 +50,13 @@ export function HorizontalCarousel({ cards, className }: HorizontalCarouselProps
 
 const CarouselCard = ({ card }: { card: CarouselCardType }) => {
   return (
-    <div className="group relative h-[400px] w-[300px] sm:h-[500px] sm:w-[400px] md:h-[600px] md:w-[450px] overflow-hidden bg-foreground/5 rounded-sm">
-      <div
-        style={{
-          backgroundImage: `url(${card.url})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105"
+    <div className="group relative h-[400px] w-[300px] sm:h-[500px] sm:w-[400px] md:h-[600px] md:w-[450px] overflow-hidden bg-foreground/5 rounded-sm shrink-0">
+      <img
+        src={card.url}
+        alt={card.title}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 ease-out group-hover:scale-105"
       />
       {/* Elegant Editorial Gradient */}
       <div className="absolute inset-0 z-10 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
