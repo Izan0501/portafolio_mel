@@ -103,7 +103,14 @@ export function LandingHero() {
         <div className="absolute top-[15%] left-[2%] md:top-[25%] md:left-[5%] pointer-events-auto">
           <motion.div style={{ y: yFast }} className="will-change-transform">
             <motion.div style={{ x: mouseXFast, y: mouseYFast }} className="will-change-transform">
-              <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[0].url} alt={exampleImages[0].title} className="w-16 h-12 sm:w-24 sm:h-16 md:w-28 md:h-20 lg:w-32 lg:h-24 object-cover cursor-pointer -rotate-[3deg] shadow-2xl rounded-xl opacity-80" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className="will-change-transform"
+              >
+                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[0].url} alt={exampleImages[0].title} className="w-16 h-12 sm:w-24 sm:h-16 md:w-28 md:h-20 lg:w-32 lg:h-24 object-cover cursor-pointer -rotate-[3deg] shadow-2xl rounded-xl opacity-80" />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -112,7 +119,14 @@ export function LandingHero() {
         <div className="absolute top-[0%] left-[8%] md:top-[6%] md:left-[11%] pointer-events-auto">
           <motion.div style={{ y: yMedium }} className="will-change-transform">
             <motion.div style={{ x: mouseXMedium, y: mouseYMedium }} className="will-change-transform">
-              <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[1].url} alt={exampleImages[1].title} className="w-40 h-28 sm:w-48 sm:h-36 md:w-56 md:h-44 lg:w-60 lg:h-48 object-cover cursor-pointer -rotate-12 shadow-2xl rounded-xl" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.4, delay: 0.30, ease: [0.16, 1, 0.3, 1] }}
+                className="will-change-transform"
+              >
+                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[1].url} alt={exampleImages[1].title} className="w-40 h-28 sm:w-48 sm:h-36 md:w-56 md:h-44 lg:w-60 lg:h-48 object-cover cursor-pointer -rotate-12 shadow-2xl rounded-xl" />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -121,7 +135,14 @@ export function LandingHero() {
         <div className="absolute top-[90%] left-[6%] md:top-[80%] md:left-[8%] pointer-events-auto">
           <motion.div style={{ y: ySlow }} className="will-change-transform">
             <motion.div style={{ x: mouseXSlow, y: mouseYSlow }} className="will-change-transform">
-              <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[2].url} alt={exampleImages[2].title} className="w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-64 lg:h-64 object-cover cursor-pointer -rotate-[4deg] shadow-2xl rounded-xl" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="will-change-transform"
+              >
+                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[2].url} alt={exampleImages[2].title} className="w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-64 lg:h-64 object-cover cursor-pointer -rotate-[4deg] shadow-2xl rounded-xl" />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -130,7 +151,14 @@ export function LandingHero() {
         <div className="absolute top-[0%] left-[87%] md:top-[2%] md:left-[83%] pointer-events-auto">
           <motion.div style={{ y: yMedium }} className="will-change-transform">
             <motion.div style={{ x: mouseXMedium, y: mouseYMedium }} className="will-change-transform">
-              <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[3].url} alt={exampleImages[3].title} className="w-40 h-36 sm:w-48 sm:h-44 md:w-60 md:h-52 lg:w-64 lg:h-56 object-cover cursor-pointer shadow-2xl rotate-[6deg] rounded-xl" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.4, delay: 0.60, ease: [0.16, 1, 0.3, 1] }}
+                className="will-change-transform"
+              >
+                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[3].url} alt={exampleImages[3].title} className="w-40 h-36 sm:w-48 sm:h-44 md:w-60 md:h-52 lg:w-64 lg:h-56 object-cover cursor-pointer shadow-2xl rotate-[6deg] rounded-xl" />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -139,7 +167,14 @@ export function LandingHero() {
         <div className="absolute top-[78%] left-[83%] md:top-[68%] md:left-[83%] pointer-events-auto">
           <motion.div style={{ y: yFast }} className="will-change-transform">
             <motion.div style={{ x: mouseXFast, y: mouseYFast }} className="will-change-transform">
-              <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[4].url} alt={exampleImages[4].title} className="w-44 h-44 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 object-cover cursor-pointer shadow-2xl rotate-[19deg] rounded-xl" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.4, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                className="will-change-transform"
+              >
+                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[4].url} alt={exampleImages[4].title} className="w-44 h-44 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 object-cover cursor-pointer shadow-2xl rotate-[19deg] rounded-xl" />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
