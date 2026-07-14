@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, useScroll, useSpring } from "framer-motion";
+import { m, useTransform, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
@@ -38,11 +38,11 @@ export function HorizontalCarousel({ cards, className }: HorizontalCarouselProps
   return (
     <section ref={targetRef} className={cn("relative h-[300vh] bg-background", className)}>
       <div className="sticky top-0 flex h-screen items-center overflow-clip">
-        <motion.div style={{ x }} className="flex gap-6 px-4 md:px-10">
+        <m.div style={{ x }} className="flex gap-6 px-4 md:px-10">
           {cards.map((card) => {
             return <CarouselCard card={card} key={card.id} />;
           })}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

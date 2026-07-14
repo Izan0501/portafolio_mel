@@ -8,11 +8,22 @@ import {
   useMemo,
   useState,
 } from "react"
-import type { AnimatePresenceProps, MotionProps, Transition } from "motion/react"
+import type { AnimatePresenceProps, MotionProps, Transition } from "framer-motion"
 import {
   AnimatePresence,
-  motion,
-} from "motion/react"
+  m,
+} from "framer-motion"
+
+const segmenter = typeof Intl !== "undefined" && "Segmenter" in Intl
+  ? new Intl.Segmenter("en", { granularity: "grapheme" })
+  : null;
+
+const splitIntoCharacters = (text: string): string[] => {
+  if (segmenter) {
+    return Array.from(segmenter.segment(text), ({ segment }) => segment)
+  }
+  return Array.from(text)
+}
 
 import { cn } from "@/lib/utils"
 
@@ -74,15 +85,6 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
   ) => {
     const [currentTextIndex, setCurrentTextIndex] = useState(0)
 
-    // handy function to split text into characters with support for unicode and emojis
-    const splitIntoCharacters = (text: string): string[] => {
-      if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-        const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" })
-        return Array.from(segmenter.segment(text), ({ segment }) => segment)
-      }
-      // Fallback for browsers that don't support Intl.Segmenter
-      return Array.from(text)
-    }
 
     const elements = useMemo(() => {
       const currentText = texts[currentTextIndex]
@@ -118,21 +120,16 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       [staggerFrom, staggerDuration]
     )
 
-    // Helper function to handle index changes and trigger callback
-    const handleIndexChange = useCallback((newIndex: number) => {
-      setCurrentTextIndex(newIndex)
-      onNext?.(newIndex)
-    }, [onNext])
-
     const next = useCallback(() => {
       const nextIndex = currentTextIndex === texts.length - 1
         ? (loop ? 0 : currentTextIndex)
         : currentTextIndex + 1
       
       if (nextIndex !== currentTextIndex) {
-        handleIndexChange(nextIndex)
+        setCurrentTextIndex(nextIndex)
+        onNext?.(nextIndex)
       }
-    }, [currentTextIndex, texts.length, loop, handleIndexChange])
+    }, [currentTextIndex, texts.length, loop, onNext])
 
     const previous = useCallback(() => {
       const prevIndex = currentTextIndex === 0
@@ -140,22 +137,25 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
         : currentTextIndex - 1
       
       if (prevIndex !== currentTextIndex) {
-        handleIndexChange(prevIndex)
+        setCurrentTextIndex(prevIndex)
+        onNext?.(prevIndex)
       }
-    }, [currentTextIndex, texts.length, loop, handleIndexChange])
+    }, [currentTextIndex, texts.length, loop, onNext])
 
     const jumpTo = useCallback((index: number) => {
       const validIndex = Math.max(0, Math.min(index, texts.length - 1))
       if (validIndex !== currentTextIndex) {
-        handleIndexChange(validIndex)
+        setCurrentTextIndex(validIndex)
+        onNext?.(validIndex)
       }
-    }, [texts.length, currentTextIndex, handleIndexChange])
+    }, [texts.length, currentTextIndex, onNext])
 
     const reset = useCallback(() => {
       if (currentTextIndex !== 0) {
-        handleIndexChange(0)
+        setCurrentTextIndex(0)
+        onNext?.(0)
       }
-    }, [currentTextIndex, handleIndexChange])
+    }, [currentTextIndex, onNext])
 
     // Expose all navigation functions via ref
     useImperativeHandle(ref, () => ({
@@ -173,7 +173,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
     }, [next, rotationInterval, auto])
 
     return (
-      <motion.span
+      <m.span
         className={cn("flex flex-wrap whitespace-pre-wrap", mainClassName)}
         {...props}
         layout
@@ -185,7 +185,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
           mode={animatePresenceMode}
           initial={animatePresenceInitial}
         >
-          <motion.div
+          <m.div
             key={currentTextIndex}
             className={cn(
               "flex flex-wrap",
@@ -211,7 +211,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                   className={cn("inline-flex", splitLevelClassName)}
                 >
                   {wordObj.characters.map((char, charIndex) => (
-                    <motion.span
+                    <m.span
                       initial={initial}
                       animate={animate}
                       exit={exit}
@@ -229,7 +229,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                       className={cn("inline-block", elementLevelClassName)}
                     >
                       {char}
-                    </motion.span>
+                    </m.span>
                   ))}
                   {wordObj.needsSpace && (
                     <span className="whitespace-pre"> </span>
@@ -237,9 +237,9 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                 </span>
               )
             })}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
-      </motion.span>
+      </m.span>
     )
   }
 )

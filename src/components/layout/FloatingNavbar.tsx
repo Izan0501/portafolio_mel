@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { m, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -30,7 +30,7 @@ export function FloatingNavbar() {
   });
 
   return (
-    <motion.nav
+    <m.nav
       variants={{
         visible: { y: 0, opacity: 1 },
         hidden: { y: "-100%", opacity: 0 },
@@ -39,7 +39,7 @@ export function FloatingNavbar() {
       transition={{ duration: 0.35, ease: "easeInOut" }}
       className="fixed top-0 inset-x-0 z-[100] flex justify-center w-full pt-6 px-4 pointer-events-none"
     >
-      <motion.div
+      <m.div
         className={cn(
           "flex items-center justify-between w-full max-w-5xl px-6 py-3 rounded-full pointer-events-auto transition-colors duration-500",
           isScrolled
@@ -67,7 +67,7 @@ export function FloatingNavbar() {
                 )}
               >
                 {active === item.name && (
-                  <motion.div
+                  <m.div
                     layoutId="active-nav-pill"
                     className="absolute inset-0 z-[-1] rounded-full bg-foreground"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -80,10 +80,10 @@ export function FloatingNavbar() {
         </ul>
 
         {/* Call to Action */}
-        <button className="px-6 py-2.5 text-[10px] font-sans font-medium uppercase tracking-[0.2em] text-background bg-foreground rounded-full hover:scale-105 transition-transform duration-300 shadow-xl">
+        <button type="button" className="px-6 py-2.5 text-[10px] font-sans font-medium uppercase tracking-[0.2em] text-background bg-foreground rounded-full hover:scale-105 transition-transform duration-300 shadow-xl">
           Book Session
         </button>
-      </motion.div>
-    </motion.nav>
+      </m.div>
+    </m.nav>
   );
 }

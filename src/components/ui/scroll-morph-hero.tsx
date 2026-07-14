@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useTransform, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { m, useTransform, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 
 // --- Types ---
@@ -22,7 +22,7 @@ function FlipCard({
     target,
 }: FlipCardProps) {
     return (
-        <motion.div
+        <m.div
             animate={{
                 x: target.x,
                 y: target.y,
@@ -45,7 +45,7 @@ function FlipCard({
             }}
             className="cursor-pointer group"
         >
-            <motion.div
+            <m.div
                 className="relative h-full w-full"
                 style={{ transformStyle: "preserve-3d" }}
                 transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
@@ -74,8 +74,8 @@ function FlipCard({
                         <p className="text-xs font-medium text-white">Details</p>
                     </div>
                 </div>
-            </motion.div>
-        </motion.div>
+            </m.div>
+        </m.div>
     );
 }
 
@@ -134,18 +134,15 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
     const [morphValue, setMorphValue] = useState(0);
     const [rotateValue, setRotateValue] = useState(0);
 
-    useMotionValueEvent(morphProgress, "change", (latest) => setMorphValue(latest));
-    useMotionValueEvent(scrollRotate, "change", (latest) => setRotateValue(latest));
+    useMotionValueEvent(morphProgress, "change", setMorphValue);
+    useMotionValueEvent(scrollRotate, "change", setRotateValue);
 
     // --- Mouse Parallax ---
     const mouseX = useMotionValue(0);
     const smoothMouseX = useSpring(mouseX, { stiffness: 30, damping: 20 });
     const [parallaxValue, setParallaxValue] = useState(0);
 
-    useEffect(() => {
-        const unsubscribe = smoothMouseX.on("change", setParallaxValue);
-        return () => unsubscribe();
-    }, [smoothMouseX]);
+    useMotionValueEvent(smoothMouseX, "change", setParallaxValue);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -173,7 +170,7 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
             <div className="flex h-full w-full flex-col items-center justify-center [perspective:1000px]">
 
                 {/* Intro Text (Scroll Fade Out) */}
-                <motion.div 
+                <m.div 
                     style={{ opacity: introOpacity, scale: introScale }}
                     className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2"
                 >
@@ -183,10 +180,10 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
                     <p className="mt-4 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
                         Scroll to explore
                     </p>
-                </motion.div>
+                </m.div>
 
                 {/* Arc Active Content (Scroll Fade In) */}
-                <motion.div
+                <m.div
                     style={{ opacity: contentOpacity, y: contentY }}
                     className="absolute top-[12%] mt-12 md:mt-16 z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
@@ -197,7 +194,7 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
                         Discover a world where light meets emotion. <br className="hidden md:block" />
                         Scroll through a curated collection of visual stories designed to captivate.
                     </p>
-                </motion.div>
+                </m.div>
 
                 {/* Main Container */}
                 <div className="relative flex items-center justify-center w-full h-full">
@@ -248,7 +245,7 @@ export default function IntroAnimation({ scrollYProgress }: { scrollYProgress: M
                         };
 
                         return (
-                            <FlipCard index={i} key={i} src={src} target={target} total={TOTAL_IMAGES}/>
+                            <FlipCard index={i} key={src} src={src} target={target} total={TOTAL_IMAGES}/>
                         );
                     })}
                 </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { LayoutGroup, motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
+import { LayoutGroup, m, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
 import { TextRotate } from "@/components/ui/text-rotate"
 
 const exampleImages = [
@@ -46,6 +46,9 @@ const exampleImages = [
   },
 ]
 
+// High-end spring configuration for buttery smooth cursor tracking
+const springConfig = { damping: 40, stiffness: 150, mass: 0.5 };
+
 export function LandingHero() {
   // 1. ABSOLUTE SCROLL TRACKING: 
   // By tracking the global window scroll instead of an element intersection,
@@ -69,8 +72,6 @@ export function LandingHero() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
-  // High-end spring configuration for buttery smooth cursor tracking
-  const springConfig = { damping: 40, stiffness: 150, mass: 0.5 };
   const smoothMouseX = useSpring(mouseX, springConfig);
   const smoothMouseY = useSpring(mouseY, springConfig);
 
@@ -97,97 +98,97 @@ export function LandingHero() {
     <section onMouseMove={handleMouseMove} className="w-full h-screen overflow-hidden flex flex-col items-center justify-center relative bg-background">
 
       {/* Global Entry Layer */}
-      <motion.div className="absolute inset-0 w-full h-full z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }}>
+      <m.div className="absolute inset-0 w-full h-full z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }}>
         
         {/* Image 1 (Fast Scroll, Fast Mouse) */}
         <div className="absolute top-[15%] left-[2%] md:top-[25%] md:left-[5%] pointer-events-auto">
-          <motion.div style={{ y: yFast }} className="will-change-transform">
-            <motion.div style={{ x: mouseXFast, y: mouseYFast }} className="will-change-transform">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+          <m.div style={{ y: yFast }} className="will-change-transform">
+            <m.div style={{ x: mouseXFast, y: mouseYFast }} className="will-change-transform">
+              <m.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(6px)" }}
                 animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 className="will-change-transform"
               >
-                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[0].url} alt={exampleImages[0].title} className="w-16 h-12 sm:w-24 sm:h-16 md:w-28 md:h-20 lg:w-32 lg:h-24 object-cover cursor-pointer -rotate-[3deg] shadow-2xl rounded-xl opacity-80" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                <m.img whileHover={{ scale: 1.05 }} src={exampleImages[0].url} alt={exampleImages[0].title} className="w-16 h-12 sm:w-24 sm:h-16 md:w-28 md:h-20 lg:w-32 lg:h-24 object-cover cursor-pointer -rotate-[3deg] shadow-2xl rounded-xl opacity-80" />
+              </m.div>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Image 2 (Medium Scroll, Medium Mouse) */}
         <div className="absolute top-[0%] left-[8%] md:top-[6%] md:left-[11%] pointer-events-auto">
-          <motion.div style={{ y: yMedium }} className="will-change-transform">
-            <motion.div style={{ x: mouseXMedium, y: mouseYMedium }} className="will-change-transform">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+          <m.div style={{ y: yMedium }} className="will-change-transform">
+            <m.div style={{ x: mouseXMedium, y: mouseYMedium }} className="will-change-transform">
+              <m.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(6px)" }}
                 animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.4, delay: 0.30, ease: [0.16, 1, 0.3, 1] }}
                 className="will-change-transform"
               >
-                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[1].url} alt={exampleImages[1].title} className="w-40 h-28 sm:w-48 sm:h-36 md:w-56 md:h-44 lg:w-60 lg:h-48 object-cover cursor-pointer -rotate-12 shadow-2xl rounded-xl" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                <m.img whileHover={{ scale: 1.05 }} src={exampleImages[1].url} alt={exampleImages[1].title} className="w-40 h-28 sm:w-48 sm:h-36 md:w-56 md:h-44 lg:w-60 lg:h-48 object-cover cursor-pointer -rotate-12 shadow-2xl rounded-xl" />
+              </m.div>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Image 3 (Slow Scroll, Slow Mouse) */}
         <div className="absolute top-[90%] left-[6%] md:top-[80%] md:left-[8%] pointer-events-auto">
-          <motion.div style={{ y: ySlow }} className="will-change-transform">
-            <motion.div style={{ x: mouseXSlow, y: mouseYSlow }} className="will-change-transform">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+          <m.div style={{ y: ySlow }} className="will-change-transform">
+            <m.div style={{ x: mouseXSlow, y: mouseYSlow }} className="will-change-transform">
+              <m.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(6px)" }}
                 animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 className="will-change-transform"
               >
-                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[2].url} alt={exampleImages[2].title} className="w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-64 lg:h-64 object-cover cursor-pointer -rotate-[4deg] shadow-2xl rounded-xl" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                <m.img whileHover={{ scale: 1.05 }} src={exampleImages[2].url} alt={exampleImages[2].title} className="w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-64 lg:h-64 object-cover cursor-pointer -rotate-[4deg] shadow-2xl rounded-xl" />
+              </m.div>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Image 4 (Medium Scroll, Medium Mouse) */}
         <div className="absolute top-[0%] left-[87%] md:top-[2%] md:left-[83%] pointer-events-auto">
-          <motion.div style={{ y: yMedium }} className="will-change-transform">
-            <motion.div style={{ x: mouseXMedium, y: mouseYMedium }} className="will-change-transform">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+          <m.div style={{ y: yMedium }} className="will-change-transform">
+            <m.div style={{ x: mouseXMedium, y: mouseYMedium }} className="will-change-transform">
+              <m.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(6px)" }}
                 animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.4, delay: 0.60, ease: [0.16, 1, 0.3, 1] }}
                 className="will-change-transform"
               >
-                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[3].url} alt={exampleImages[3].title} className="w-40 h-36 sm:w-48 sm:h-44 md:w-60 md:h-52 lg:w-64 lg:h-56 object-cover cursor-pointer shadow-2xl rotate-[6deg] rounded-xl" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                <m.img whileHover={{ scale: 1.05 }} src={exampleImages[3].url} alt={exampleImages[3].title} className="w-40 h-36 sm:w-48 sm:h-44 md:w-60 md:h-52 lg:w-64 lg:h-56 object-cover cursor-pointer shadow-2xl rotate-[6deg] rounded-xl" />
+              </m.div>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Image 5 (Fast Scroll, Fast Mouse) */}
         <div className="absolute top-[78%] left-[83%] md:top-[68%] md:left-[83%] pointer-events-auto">
-          <motion.div style={{ y: yFast }} className="will-change-transform">
-            <motion.div style={{ x: mouseXFast, y: mouseYFast }} className="will-change-transform">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(14px)" }}
+          <m.div style={{ y: yFast }} className="will-change-transform">
+            <m.div style={{ x: mouseXFast, y: mouseYFast }} className="will-change-transform">
+              <m.div
+                initial={{ opacity: 0, scale: 0.65, y: 80, filter: "blur(6px)" }}
                 animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.4, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 className="will-change-transform"
               >
-                <motion.img whileHover={{ scale: 1.05 }} src={exampleImages[4].url} alt={exampleImages[4].title} className="w-44 h-44 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 object-cover cursor-pointer shadow-2xl rotate-[19deg] rounded-xl" />
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                <m.img whileHover={{ scale: 1.05 }} src={exampleImages[4].url} alt={exampleImages[4].title} className="w-44 h-44 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 object-cover cursor-pointer shadow-2xl rotate-[19deg] rounded-xl" />
+              </m.div>
+            </m.div>
+          </m.div>
         </div>
 
-      </motion.div>
+      </m.div>
 
       {/* Center Text Layer — multi-layered parallax + fade out on scroll */}
-      <motion.div
+      <m.div
         style={{ opacity: fadeOut }}
         className="flex flex-col justify-center items-center w-[250px] sm:w-[300px] md:w-[500px] lg:w-[700px] z-50 pointer-events-auto will-change-transform"
       >
-        <motion.div style={{ y: yTitle }} className="will-change-transform w-full">
-          <motion.h1
+        <m.div style={{ y: yTitle }} className="will-change-transform w-full">
+          <m.h1
             className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-center w-full justify-center items-center flex-col flex whitespace-pre leading-tight font-calendas tracking-tight space-y-1 md:space-y-4"
             animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 20 }}
@@ -195,7 +196,7 @@ export function LandingHero() {
           >
             <span>Capturing moments that are </span>
             <LayoutGroup>
-              <motion.span layout className="flex whitespace-pre">
+              <m.span layout className="flex whitespace-pre">
                 <TextRotate
                   texts={["timeless", "artistic", "bold", "cinematic", "pure", "unforgettable", "elegant"]}
                   mainClassName="overflow-hidden pr-3 text-[#0015ff] py-0 pb-2 md:pb-4 rounded-xl"
@@ -204,25 +205,26 @@ export function LandingHero() {
                   rotationInterval={3000}
                   transition={{ type: "spring", damping: 30, stiffness: 400 }}
                 />
-              </motion.span>
+              </m.span>
             </LayoutGroup>
-          </motion.h1>
-        </motion.div>
+          </m.h1>
+        </m.div>
 
-        <motion.div style={{ y: ySubtitle }} className="will-change-transform w-full">
-          <motion.p
+        <m.div style={{ y: ySubtitle }} className="will-change-transform w-full">
+          <m.p
             className="text-sm sm:text-lg md:text-xl lg:text-2xl text-center font-overusedGrotesk pt-4 sm:pt-8 md:pt-10 lg:pt-12 text-muted-foreground"
             animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut", delay: 0.5 }}
           >
             Melina Zanacchi | High-End Professional Photography &amp; Art Direction.
-          </motion.p>
-        </motion.div>
+          </m.p>
+        </m.div>
 
-        <motion.div style={{ y: yButtons }} className="will-change-transform w-full">
+        <m.div style={{ y: yButtons }} className="will-change-transform w-full">
           <div className="flex flex-row justify-center space-x-4 items-center mt-10 sm:mt-16 md:mt-20 lg:mt-20 text-xs">
-            <motion.button
+            <m.button
+              type="button"
               className="sm:text-base md:text-lg lg:text-xl font-semibold tracking-tight text-background bg-foreground px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full z-20 shadow-2xl font-calendas"
               animate={{ opacity: 1, y: 0 }}
               initial={{ opacity: 0, y: 20 }}
@@ -230,8 +232,9 @@ export function LandingHero() {
               whileHover={{ scale: 1.05, transition: { type: "spring", damping: 30, stiffness: 400 } }}
             >
               <a href="#gallery">View Gallery <span className="font-serif ml-1">→</span></a>
-            </motion.button>
-            <motion.button
+            </m.button>
+            <m.button
+              type="button"
               className="sm:text-base md:text-lg lg:text-xl font-semibold tracking-tight text-white bg-[#0015ff] px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full z-20 shadow-2xl font-calendas"
               animate={{ opacity: 1, y: 0 }}
               initial={{ opacity: 0, y: 20 }}
@@ -239,14 +242,14 @@ export function LandingHero() {
               whileHover={{ scale: 1.05, transition: { type: "spring", damping: 30, stiffness: 400 } }}
             >
               <a href="#contact">Contact Me</a>
-            </motion.button>
+            </m.button>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {/* Minimalist Editorial Scroll Cue */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
-        <motion.div
+        <m.div
           style={{ y: yFast, opacity: fadeOut }}
           className="flex flex-col items-center will-change-transform"
         >
@@ -255,7 +258,7 @@ export function LandingHero() {
             Scroll
           </span>
           <div className="w-[1px] h-16 bg-foreground/10 relative overflow-hidden rounded-full">
-            <motion.div
+            <m.div
               className="w-full h-1/3 bg-foreground/60 absolute top-0 left-0 rounded-full"
               animate={{ y: ["-100%", "400%"] }}
               transition={{
@@ -265,7 +268,7 @@ export function LandingHero() {
               }}
             />
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )

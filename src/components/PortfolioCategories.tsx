@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, LayoutGroup, type Variants, type Easing } from "framer-motion";
+import { m, useScroll, useTransform, useSpring, LayoutGroup, type Variants, type Easing } from "framer-motion";
 import { ImageAccordion, type AccordionItemData } from "@/components/ui/image-accordion";
 import { TextRotate } from "@/components/ui/text-rotate";
 
@@ -75,9 +75,9 @@ export function PortfolioCategories() {
         <div className="flex flex-col xl:flex-row items-center justify-between gap-16">
           
           {/* Left Side: Parallax Outer Wrapper */}
-          <motion.div style={{ y: textY }} className="w-full xl:w-5/12 text-center xl:text-left will-change-transform">
+          <m.div style={{ y: textY }} className="w-full xl:w-5/12 text-center xl:text-left will-change-transform">
             {/* Inner Staggered Reveal Choreography */}
-            <motion.div
+            <m.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -86,13 +86,13 @@ export function PortfolioCategories() {
             >
               <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif font-semibold text-foreground leading-tight tracking-tight flex flex-col">
                 <span className="overflow-hidden block pb-1">
-                  <motion.span variants={maskRevealVariants} className="block">Mastering</motion.span>
+                  <m.span variants={maskRevealVariants} className="block">Mastering</m.span>
                 </span>
                 <span className="overflow-hidden block">
-                  <motion.span variants={maskRevealVariants} className="flex items-center whitespace-pre">
+                  <m.span variants={maskRevealVariants} className="flex items-center whitespace-pre">
                     <span className="italic mr-3 text-muted-foreground">the</span>
                     <LayoutGroup>
-                      <motion.span layout className="flex">
+                      <m.span layout className="flex">
                         <TextRotate 
                           texts={["Craft.", "Emotion.", "Light.", "Moment.", "Shadows."]} 
                           mainClassName="overflow-hidden text-foreground" 
@@ -101,38 +101,38 @@ export function PortfolioCategories() {
                           staggerFrom="last" 
                           transition={{ type: "spring", damping: 30, stiffness: 400 }} 
                         />
-                      </motion.span>
+                      </m.span>
                     </LayoutGroup>
-                  </motion.span>
+                  </m.span>
                 </span>
               </h2>
               
-              <motion.p variants={fadeUpVariants} className="mt-8 text-sm md:text-base font-sans text-muted-foreground leading-relaxed max-w-md">
+              <m.p variants={fadeUpVariants} className="mt-8 text-sm md:text-base font-sans text-muted-foreground leading-relaxed max-w-md">
                 Elevating visual narratives through high-end editorial and fine-art photography. Every frame is meticulously crafted to evoke emotion and capture raw authenticity.
-              </motion.p>
+              </m.p>
               
-              <motion.div variants={fadeUpVariants} className="mt-10">
+              <m.div variants={fadeUpVariants} className="mt-10">
                 <a
                   href="#contact"
                   className="inline-block border border-foreground text-foreground font-sans text-xs font-semibold uppercase tracking-[0.2em] px-8 py-3 rounded-full hover:bg-foreground hover:text-background transition-colors duration-300"
                 >
                   Explore Galleries
                 </a>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              </m.div>
+            </m.div>
+          </m.div>
 
           {/* Right Side: Heavy Parallax Image Accordion */}
-          <motion.div style={{ y: accordionY }} className="w-full xl:w-7/12 will-change-transform">
-            <motion.div
+          <m.div style={{ y: accordionY }} className="w-full xl:w-7/12 will-change-transform">
+            <m.div
               variants={imageRevealVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
             >
               <ImageAccordion items={categories}/>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
         </div>
       </div>

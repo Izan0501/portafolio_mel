@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { m, useScroll, useTransform, useSpring } from "framer-motion";
 
 export function FooterReveal() {
   const containerRef = useRef<HTMLElement>(null);
@@ -29,7 +29,7 @@ export function FooterReveal() {
       <div className="fixed bottom-0 left-0 w-full h-[50vh] md:h-[60vh] bg-[#0a0a0a] text-neutral-300 flex flex-col justify-between pt-16 overflow-hidden">
 
         {/* Asymmetrical 12-Column Editorial Grid */}
-        <motion.div
+        <m.div
           style={{ y: contentY }}
           className="container mx-auto px-8 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-6 lg:gap-8 z-10 w-full"
         >
@@ -91,10 +91,10 @@ export function FooterReveal() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Minimalist Bottom Anchor */}
-        <motion.div
+        <m.div
           style={{ opacity: textRevealOpacity }}
           className="w-full flex flex-col items-center pb-8 px-4 z-10 mt-auto"
         >
@@ -106,6 +106,7 @@ export function FooterReveal() {
             <p>© {new Date().getFullYear()} Melina Zanacchi Studio</p>
 
             <button
+              type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="hover:text-white transition-colors duration-300 flex items-center gap-2"
             >
@@ -115,7 +116,7 @@ export function FooterReveal() {
               </svg>
             </button>
           </div>
-        </motion.div>
+        </m.div>
 
       </div>
     </footer>

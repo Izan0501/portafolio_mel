@@ -44,8 +44,10 @@ export const CardContainer = ({
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   };
 
+  const contextValue = React.useMemo(() => [isMouseEntered, setIsMouseEntered] as const, [isMouseEntered]);
+
   return (
-    <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
+    <MouseEnterContext.Provider value={contextValue as any}>
       <div
         className={cn("flex items-center justify-center", containerClassName)}
         style={{ perspective: "1000px" }}
@@ -133,7 +135,7 @@ export const CardItem = ({
   );
 };
 
-export const useMouseEnter = () => {
+const useMouseEnter = () => {
   const context = useContext(MouseEnterContext);
   if (context === undefined) {
     throw new Error("useMouseEnter must be used within a MouseEnterProvider");

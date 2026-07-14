@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useTransform, motion, useScroll } from "framer-motion";
+import { useTransform, m, useScroll } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 import {
   CardContainer as ThreeDCardContainer,
@@ -49,7 +49,7 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
       className="h-screen flex items-center justify-center sticky top-0"
       style={{ zIndex: card.index }}
     >
-      <motion.article
+      <m.article
         style={{
           scale: cardScale,
           top: `${card.index * 2}vh`,
@@ -58,7 +58,7 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
         className="relative w-full max-w-5xl mx-auto h-[80vh] rounded-2xl overflow-hidden shadow-2xl border border-foreground/10"
       >
         {/* Background image — scroll parallax, untouched */}
-        <motion.div
+        <m.div
           className="absolute inset-0 w-full h-full bg-neutral-900"
           style={{ scale: imageScale, opacity: imageOpacity }}
         >
@@ -67,7 +67,7 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
             alt={card.title}
             className="w-full h-full object-cover opacity-80"
           />
-        </motion.div>
+        </m.div>
 
         {/* Editorial Dark Overlay */}
         <div
@@ -153,7 +153,7 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
           </ThreeDCardBody>
         </ThreeDCardContainer>
 
-      </motion.article>
+      </m.article>
     </div>
   );
 }
