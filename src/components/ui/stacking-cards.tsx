@@ -109,7 +109,8 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
                 
                 <ThreeDCardItem
                   translateZ={30}
-                  className="text-xs sm:text-sm font-mono text-white/60 tracking-widest font-semibold w-auto drop-shadow-md"
+                  className="text-xs sm:text-sm font-mono text-white/60 tracking-widest font-semibold w-auto"
+                  style={{ textShadow: "0 4px 8px rgba(0,0,0,0.5)" }}
                 >
                   0{card.index} / 0{total}
                 </ThreeDCardItem>
@@ -119,17 +120,18 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
               <div className="flex flex-col gap-2 sm:gap-3 max-w-2xl" style={{ transformStyle: "preserve-3d" }}>
                 <ThreeDCardItem
                   translateZ={60}
-                  className="text-xs sm:text-sm uppercase tracking-[0.3em] font-sans font-bold w-auto drop-shadow-md"
-                  style={{ color: card.accentColor }}
+                  className="text-xs sm:text-sm uppercase tracking-[0.3em] font-sans font-bold w-auto"
+                  style={{ color: card.accentColor, textShadow: "0 4px 8px rgba(0,0,0,0.5)" }}
                 >
                   {card.subtitle || card.label}
                 </ThreeDCardItem>
 
-                {/* Title leaps out aggressively */}
+                {/* Title leaps out aggressively (Vector Sharpness Enforced) */}
                 <ThreeDCardItem
                   as="h2"
                   translateZ={120}
-                  className="text-3xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight leading-none drop-shadow-[0_15px_25px_rgba(0,0,0,0.9)] w-full"
+                  className="text-3xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight leading-none w-full antialiased subpixel-antialiased backface-hidden select-none"
+                  style={{ textShadow: "0 12px 24px rgba(0,0,0,0.9)" }}
                 >
                   {card.title}
                 </ThreeDCardItem>
@@ -137,7 +139,8 @@ function CardItem({ card, progress, range, targetScale, total }: CardItemProps) 
                 {/* Description */}
                 <ThreeDCardItem
                   translateZ={80}
-                  className="text-sm sm:text-base md:text-lg text-neutral-200 font-sans font-normal leading-relaxed drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] w-full mt-1 sm:mt-2"
+                  className="text-sm sm:text-base md:text-lg text-neutral-200 font-sans font-normal leading-relaxed w-full mt-1 sm:mt-2"
+                  style={{ textShadow: "0 4px 8px rgba(0,0,0,0.8)" }}
                 >
                   {card.description}
                 </ThreeDCardItem>
