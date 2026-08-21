@@ -59,7 +59,7 @@ const scaleVariants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.8, ease: "easeOut" },
+    transition: { duration: 0.8, ease: "easeOut" as const },
   },
   hidden: {
     opacity: 0,
@@ -81,7 +81,7 @@ function AboutMelinaSection() {
                 THE ARTIST & DIRECTION
               </span>
               <div className="flex gap-3">
-                {["Instagram", "Behance", "Vogue"].map((social, i) => (
+                {["Instagram", "Behance", "Vogue"].map((social) => (
                   <a
                     key={social}
                     href={`#${social.toLowerCase()}`}

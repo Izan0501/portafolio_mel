@@ -169,15 +169,11 @@ export function AboutSection3() {
                   />
                 </clipPath>
               </defs>
-              {/* eslint-disable-next-line react/no-unknown-property */}
               <image
                 clipPath="url(#clip-inverted)"
                 preserveAspectRatio="xMidYMid slice"
                 width="100%"
                 height="100%"
-                decoding="async"
-                // @ts-expect-error SVG image loading attribute is valid but not in TS types
-                loading="lazy"
                 xlinkHref="https://images.unsplash.com/photo-1718601980986-0ce75101d52d?w=1200&auto=format&fit=crop"
                 href="https://images.unsplash.com/photo-1718601980986-0ce75101d52d?w=1200&auto=format&fit=crop"
               />

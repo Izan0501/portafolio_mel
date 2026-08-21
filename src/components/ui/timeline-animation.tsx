@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import { ElementType, ComponentPropsWithoutRef, ReactNode, RefObject } from "react";
+import { type ComponentPropsWithoutRef, type ReactNode, type RefObject } from "react";
 import { cn } from "@/lib/utils";
 
 // ─── Polymorphic type helpers ──────────────────────────────────────────────────

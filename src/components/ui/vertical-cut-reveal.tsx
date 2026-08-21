@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import { ReactNode, useMemo, useId } from "react";
+import { type ReactNode, useMemo, useId } from "react";
 import { cn } from "@/lib/utils";
 
 export interface VerticalCutRevealProps {
