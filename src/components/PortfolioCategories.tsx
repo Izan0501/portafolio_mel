@@ -70,7 +70,7 @@ export function PortfolioCategories() {
   const accordionY = useTransform(smoothProgress, [0, 1], [120, -250]);
 
   return (
-    <section ref={containerRef} id="portfolio" className="relative w-full bg-background mt-[15vh] md:mt-[25vh] pt-24 md:pt-36 pb-32 md:pb-48 overflow-hidden">
+    <section ref={containerRef} id="portfolio" className="relative w-full bg-background mt-[15vh] md:mt-[25vh] pt-24 md:pt-36 pb-32 md:pb-48 overflow-hidden scroll-mt-24">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex flex-col xl:flex-row items-center justify-between gap-16">
           
